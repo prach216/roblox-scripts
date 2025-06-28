@@ -1,0 +1,73 @@
+local Teams = game:GetService("Teams")
+
+-- Define your desired team order from TOP to BOTTOM
+local DESIRED_ORDER = {
+	"leader",
+	"council member", 
+	"guard",
+	"doctor",
+	"civilian",
+	"peasant",
+	"barbarian",
+	"criminal",
+	"choosing"
+}
+
+local function reorderTeams()
+
+	local originalTeams = {}
+	for _, team in ipairs(Teams:GetTeams()) do
+		table.insert(originalTeams, {
+			Name = team.Name,
+			TeamColor = team.TeamColor,
+			AutoAssignable = team.AutoAssignable,
+			CustomProperties = team:GetAttributes()
+		})
+	end
+
+	for _, team in ipairs(Teams:GetTeams()) do
+		team:Destroy()
+	end
+
+	for _, teamName in ipairs(DESIRED_ORDER) do
+		for _, originalTeam in ipairs(originalTeams) do
+			if originalTeam.Name:lower() == teamName:lower() then
+				local newTeam = Instance.new("Team")
+				newTeam.Name = originalTeam.Name
+				newTeam.TeamColor = originalTeam.TeamColor
+				newTeam.AutoAssignable = originalTeam.AutoAssignable
+
+				for k, v in pairs(originalTeam.CustomProperties) do
+					newTeam:SetAttribute(k, v)
+				end
+
+				newTeam.Parent = Teams
+				break
+			end
+		end
+	end
+
+	for _, originalTeam in ipairs(originalTeams) do
+		local found = false
+		for _, teamName in ipairs(DESIRED_ORDER) do
+			if originalTeam.Name:lower() == teamName:lower() then
+				found = true
+				break
+			end
+		end
+
+		if not found then
+			local newTeam = Instance.new("Team")
+			newTeam.Name = originalTeam.Name
+			newTeam.TeamColor = originalTeam.TeamColor
+			newTeam.AutoAssignable = originalTeam.AutoAssignable
+			for k, v in pairs(originalTeam.CustomProperties) do
+				newTeam:SetAttribute(k, v)
+			end
+			newTeam.Parent = Teams
+		end
+	end
+end
+
+game.Players.PlayerAdded:Connect(reorderTeams)
+reorderTeams()
