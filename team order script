@@ -1,5 +1,6 @@
 local Teams = game:GetService("Teams")
 
+-- VERY IMPORTANT: CHANGE NAMES OF TEAMS AND AND , OR ; AFTER EACH TEAM BUT NOT THE LAST ONE PUT THE NAMES IT ' " OR `
 -- Define your desired team order from TOP to BOTTOM
 local DESIRED_ORDER = {
 	"leader",
